@@ -6,6 +6,7 @@ User = get_user_model()
 
 class Post(models.Model):
     # свойство text типа TextField
+    objects = None
     text = models.TextField()
 
     # свойство pub_date типа DateTimeField, текст "date published" это заголовок

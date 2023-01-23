@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Новая запись{% endblock %}
+{% block title %}Создать новый пост{% endblock %}
 {% block content %}
 {# загружаем фильтр #}
 {% load user_filters %}
@@ -7,7 +7,7 @@
 <div class="row justify-content-center">
     <div class="col-md-8 p-5">
         <div class="card">
-            <div class="card-header">Новая запись</div>
+            <div class="card-header">Создать новый пост</div>
             <div class="card-body">
 
               {% for error in form.errors %}
@@ -36,7 +36,7 @@
 
                     <div class="col-md-6 offset-md-4">
                             <button type="submit" class="btn btn-primary">
-                                Создать запись
+                                Опубликовать
                             </button>
                     </div>
                 </form>

@@ -34,6 +34,11 @@ class Post(models.Model):
         null=True,
         verbose_name='Группа'
     )
+    image = models.ImageField(
+        upload_to='posts/%Y/%m/%d/',
+        blank=True,
+        null=True
+    )
 
     def __str__(self):
         return self.text

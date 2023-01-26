@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
@@ -72,18 +73,18 @@ def post_view(request, username, post_id):
     )
 
 
+@login_required
 def post_edit(request, username, post_id):
-    author = User.objects.get(username=username)
+    author = get_object_or_404(User, username=username)
     post = get_object_or_404(Post, author=author, pk=post_id)
     if request.method == 'GET':
         if request.user != post.author:
             return redirect('post', username=username, post_id=post.id)
-        form = PostForm(instance=post)
+    form = PostForm(request.POST or None, files=request.FILES or None, instance=post)
     if request.method == 'POST':
-        form = PostForm(request.POST, instance=post)
         if form.is_valid():
             form.save()
-        return redirect('post', username=username, post_id=post.id)
+            return redirect('post', username=request.user.username, post_id=post.id)
     return render(request, 'new_post.html', {'form': form, 'post': post})
 
 

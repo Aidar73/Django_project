@@ -65,3 +65,10 @@ class ProfileTest(TestCase):
         # (его редиректит на страницу входа)
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, '/')
+
+
+class PageNotFoundTest(TestCase):
+    def test_404(self):
+        self.client = Client()
+        response = self.client.get('afasd')
+        self.assertEqual(response.status_code, 404)

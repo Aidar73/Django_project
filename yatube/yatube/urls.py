@@ -26,3 +26,6 @@ urlpatterns = [
     path('about-spec/', views.flatpage, {'url': '/about-spec/'}, name='about-spec'),
     path("", include("posts.urls")),
 ]
+
+handler404 = "posts.views.page_not_found" # noqa
+handler500 = "posts.views.server_error" # noqa

@@ -19,13 +19,10 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # flatpages
-    path('about/', include('django.contrib.flatpages.urls')),
     path("auth/", include("users.urls")),
     path("auth/", include("django.contrib.auth.urls")),
+    path('about/', include('django.contrib.flatpages.urls')),
+    path('about-author/', views.flatpage, {'url': '/about-author/'}, name='about-author'),
+    path('about-spec/', views.flatpage, {'url': '/about-spec/'}, name='about-spec'),
     path("", include("posts.urls")),
-]
-urlpatterns += [
-        path('about-author/', views.flatpage, {'url': '/about-author/'}, name='about-author'),
-        path('about-spec/', views.flatpage, {'url': '/about-spec/'}, name='about-spec'),
 ]

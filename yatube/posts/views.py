@@ -33,6 +33,8 @@ def group_posts(request, slug):
 
 
 def new_post(request):
+    if not request.user.is_authenticated:
+        return redirect('index')
     if request.method == 'POST':
         form = PostForm(request.POST)
         if form.is_valid():
@@ -41,8 +43,7 @@ def new_post(request):
             post.save()
             return redirect('post', username=post.author.username, post_id=post.id)
         return render(request, "new_post.html", {"form": form})
-    else:
-        form = PostForm()
+    form = PostForm()
     return render(request, "new_post.html", {"form": form})
 
 
@@ -75,7 +76,6 @@ def post_edit(request, username, post_id):
     author = User.objects.get(username=username)
     post = get_object_or_404(Post, author=author, pk=post_id)
     if request.method == 'GET':
-        print(request.user, post.author)
         if request.user != post.author:
             return redirect('post', username=username, post_id=post.id)
         form = PostForm(instance=post)

@@ -4,7 +4,7 @@ from django.core.paginator import Paginator
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 
-from posts.forms import PostForm
+from posts.forms import PostForm, CommentForm
 from posts.models import Post, Group, User
 
 
@@ -37,7 +37,7 @@ def new_post(request):
     if not request.user.is_authenticated:
         return redirect('index')
     if request.method == 'POST':
-        form = PostForm(request.POST)
+        form = PostForm(request.POST or None, files=request.FILES or None)
         if form.is_valid():
             post = form.save(commit=False)
             post.author = request.user
@@ -66,10 +66,18 @@ def post_view(request, username, post_id):
     author = User.objects.get(username=username)
     count = author.posts.all().count()
     post = get_object_or_404(Post, author=author, pk=post_id)
+    items = post.comments.all()
+    form = CommentForm()
     return render(
         request,
         'post.html',
-        {'author': author, 'count': count, 'post': post}
+        {
+            'author': author,
+            'count': count,
+            'post': post,
+            'items': items,
+            'form': form
+        }
     )
 
 
@@ -86,6 +94,24 @@ def post_edit(request, username, post_id):
             form.save()
             return redirect('post', username=request.user.username, post_id=post.id)
     return render(request, 'new_post.html', {'form': form, 'post': post})
+
+
+def add_comment(request, username, post_id):
+    if not request.user.is_authenticated:
+        return redirect('index')
+    author = get_object_or_404(User, username=username)
+    post = get_object_or_404(Post, author=author, pk=post_id)
+    if request.method == 'POST':
+        form = CommentForm(request.POST or None)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post = post
+            comment.author = request.user
+            comment.save()
+            return redirect('post', username=post.author.username, post_id=post.id)
+        return render(request, "comments.html", {"form": form})
+    form = CommentForm()
+    return render(request, "comments.html", {"form": form})
 
 
 def page_not_found(request, exception):

@@ -1,6 +1,8 @@
 from django.test import TestCase, Client
 
 # Create your tests here.
+from django.urls import reverse
+
 from .models import *
 
 
@@ -56,6 +58,22 @@ class ProfileTest(TestCase):
         self.assertEqual(response.context['post'], self.post)
         self.assertIn(self.post, response_index.context['page'])
         self.assertIn(self.post, response_profile.context['page'])
+
+    def test_image(self):
+        with open('posts/img.jpg', 'rb') as img:
+            # self.client.login(username="sarah", password="12345")
+            post = self.client.post(
+                f"/{self.username}/{self.post_id}/edit/",
+                {'author': self.user, 'text': 'post with image', 'image': img}
+            )
+            response = self.client.get(f"/{self.username}/{self.post_id}/")
+            response_index = self.client.get('/')
+            response_profile = self.client.get(f"/{self.username}/")
+            self.assertEqual(response.status_code, 200)
+            self.assertContains(response, '<img')
+            self.assertContains(response_index, '<img')
+            self.assertContains(response_profile, '<img')
+
 
     def test_create_post_not_user(self):
         # проверяем что неавторизованный посетитель не может опубликовать пост

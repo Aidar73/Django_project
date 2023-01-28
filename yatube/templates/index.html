@@ -2,51 +2,17 @@
 {% block title %} Последние обновления {% endblock %}
 {% block content %}
 
-<div class="col-md-10 offset-md-1">
-    <h1> Последние обновления на сайте </h1>
-    {% load thumbnail %}
-    {% for post in page %}
-    <!-- Начало блока с отдельным постом -->
-    <div class="card mb-3 mt-1 shadow-sm">
-        {% thumbnail post.image "960x339" crop="center" upscale=True as im %}
-        <img class="card-img" src="{{ im.url }}">
-        {% endthumbnail %}
-        <div class="card-body">
-            <p class="card-text">
-                <!-- Ссылка на страницу автора в атрибуте href; username автора в тексте ссылки -->
-                <strong class="d-block text-gray-dark">
-                    <a href="{% url 'profile' post.author %}">
-                        {% if post.author.get_full_name %}
-                        {{ post.author.get_full_name }}
-                        {% else %}@{{ post.author }}
-                        {% endif %}
-                    </a>
-                </strong>
-                <!-- Текст поста -->
-                {{ post.text|linebreaksbr }}
-                {% if not forloop.last %}<hr>{% endif %}                                    </p>
-            <div class="d-flex justify-content-between align-items-center">
-                <div class="btn-group ">
-                    <!-- Ссылка на страницу записи в атрибуте href-->
-                    <a class="btn btn-sm text-muted" href="{% url 'post' username=post.author.username post_id=post.id %}" role="button">Добавить комментарий</a>
-                    <!-- Ссылка на редактирование, показывается только автору записи -->
-                    {% if request.user == post.author %}
-                    <a class="btn btn-sm text-muted" href="{% url 'post_edit' username=post.author.username post_id=post.id %}" role="button">Редактировать</a>
-                    {% endif %}
-                </div>
-                <!-- Дата публикации  -->
-                <small class="text-muted">{{ post.pub_date|date:"d M Y г. G:i" }}</small>
-            </div>
-        </div>
+    <div class="container">
+           <h1> Последние обновления на сайте</h1>
+            <!-- Вывод ленты записей -->
+                {% for post in page %}
+                  <!-- Вот он, новый include! -->
+                    {% include "post_item.html" with post=post %}
+                {% endfor %}
     </div>
-    <!-- Конец блока с отдельным постом -->
-    {% endfor %}
-
-    <!-- Здесь постраничная навигация паджинатора -->
-    {% if page.has_other_pages %}
-    {% include "paginator.html" with items=page paginator=paginator %}
-    {% endif %}
-</div>
-
+        <!-- Вывод паджинатора -->
+        {% if page.has_other_pages %}
+            {% include "paginator.html" with items=page paginator=paginator%}
+        {% endif %}
 
 {% endblock %}

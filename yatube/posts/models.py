@@ -37,7 +37,8 @@ class Post(models.Model):
     image = models.ImageField(
         upload_to='posts/%Y/%m/%d/',
         blank=True,
-        null=True
+        null=True,
+        verbose_name='Изображение'
     )
 
     def __str__(self):
@@ -62,7 +63,7 @@ class Comment(models.Model):
         verbose_name='Автор'
     )
     text = models.TextField(verbose_name='Текст')
-    created = models.DateTimeField("date published", auto_now_add=True)
+    created = models.DateTimeField("comment_created", auto_now_add=True)
 
     def __str__(self):
         return self.text

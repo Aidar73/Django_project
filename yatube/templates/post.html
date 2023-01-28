@@ -33,40 +33,9 @@
             <div class="col-md-9">
 
             <!-- Пост -->
-                <div class="card mb-3 mt-1 shadow-sm">
-                    {% load thumbnail %}
-                    {% thumbnail post.image "960x339" crop="center" upscale=True as im %}
-                        <img class="card-img" src="{{ im.url }}">
-                    {% endthumbnail %}
-                        <div class="card-body">
-                                <p class="card-text">
-                                        <!-- Ссылка на страницу автора в атрибуте href; username автора в тексте ссылки -->
-                                        <strong class="d-block text-gray-dark">
-                                            <a href="{% url 'profile' post.author %}">
-                                                {% if post.author.get_full_name %}
-                                                {{ post.author.get_full_name }}
-                                                {% else %}@{{ post.author }}
-                                                {% endif %}
-                                            </a>
-                                        </strong>
-                                        <!-- Текст поста -->
-                                        {{ post.text|linebreaksbr }}
-                                </p>
-                                <div class="d-flex justify-content-between align-items-center">
-                                        <div class="btn-group ">
-                                                <!-- Ссылка на страницу записи в атрибуте href-->
-                                                <!-- Ссылка на редактирование, показывается только автору записи -->
-                                                {% if request.user == post.author %}
-                                                    <a class="btn btn-sm text-muted" href="{% url 'post_edit' username=post.author.username post_id=post.id %}" role="button">Редактировать</a>
-                                                {% endif %}
-                                        </div>
-                                        <!-- Дата публикации  -->
-                                        <small class="text-muted">{{ post.pub_date|date:"d M Y г. G:i" }}</small>
-                                </div>
-                                {% if not forloop.last %}<hr>{% endif %}
-                        {% include 'comments.html' %}
-                        </div>
-                </div>
+                {% include "post_item.html" with post=post %}
+                {% include 'comments.html' %}
+            </div>
      </div>
     </div>
 </main>

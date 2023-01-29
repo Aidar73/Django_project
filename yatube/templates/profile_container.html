@@ -21,6 +21,7 @@
         </li>
     </ul>
     {% if user != author and request.user.is_authenticated %}
+    <ul class="list-group list-group-flush">
         <li class="list-group-item">
             {% if following %}
                 <a class="btn btn-lg btn-light"
@@ -34,5 +35,6 @@
                 </a>
             {% endif %}
         </li>
+    </ul>
     {% endif %}
 </div>

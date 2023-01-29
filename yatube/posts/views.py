@@ -9,7 +9,6 @@ from posts.forms import PostForm, CommentForm
 from posts.models import Post, Group, User, Follow
 
 
-@cache_page(20, key_prefix='page')
 def index(request):
     post_list = Post.objects.order_by('-pub_date').all()
     paginator = Paginator(post_list, 10)  # показывать по 10 записей на странице.

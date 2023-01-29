@@ -34,6 +34,7 @@ def group_posts(request, slug):
     )
 
 
+@login_required
 def new_post(request):
     if not request.user.is_authenticated:
         return redirect('index')
@@ -99,6 +100,7 @@ def post_edit(request, username, post_id):
     return render(request, 'new_post.html', {'form': form, 'post': post})
 
 
+@login_required
 def add_comment(request, username, post_id):
     if not request.user.is_authenticated:
         return redirect('index')
@@ -149,7 +151,7 @@ def follow_index(request):
 @login_required
 def profile_follow(request, username):
     author = User.objects.get(username=username)
-    if not Follow.objects.filter(user=request.user, author=author):
+    if not Follow.objects.filter(user=request.user, author=author) and author != request.user:
         Follow.objects.create(user=request.user, author=author).save()
     return redirect('profile', username=username)
 

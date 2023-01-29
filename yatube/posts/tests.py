@@ -82,7 +82,6 @@ class ProfileTest(TestCase):
         self.assertEqual(response.context, None)
         # (его редиректит на страницу входа)
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, '/')
 
 
 class PageNotFoundTest(TestCase):

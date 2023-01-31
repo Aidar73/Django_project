@@ -49,7 +49,7 @@ def new_post(request):
 
 
 def profile(request, username):
-    author = User.objects.get(username=username)
+    author = get_object_or_404(User, username=username)
     post_list = Post.objects.filter(author=author.pk)
     paginator = Paginator(post_list, 10)  # показывать по 10 записей на странице.
     page_number = request.GET.get('page')  # переменная в URL с номером запрошенной страницы
@@ -64,7 +64,7 @@ def profile(request, username):
 
 
 def post_view(request, username, post_id):
-    author = User.objects.get(username=username)
+    author = get_object_or_404(User, username=username)
     post = get_object_or_404(Post, author=author, pk=post_id)
     items = post.comments.all()
     form = CommentForm()
